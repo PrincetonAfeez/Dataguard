@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dataguard"
+version = "0.1.0"
+description = "Data validation and cleansing CLI (sanitize, contacts, audit, logs, CSV, HTML). If another `dataguard` package is installed, use the `dg-clean` entry point or a dedicated venv."
+requires-python = ">=3.10"
+
+[project.scripts]
+dataguard = "dataguard.cli:main"
+dg-clean = "dg_clean_entry:main"
+
+[tool.setuptools]
+package-dir = {"dataguard" = "."}
+packages = ["dataguard", "dataguard.modules"]
+py-modules = ["dg_clean_entry"]
+
+[tool.setuptools.package-data]
+dataguard = ["schema/*.json"]

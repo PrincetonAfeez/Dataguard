@@ -1,0 +1,5 @@
+# DataGuard has no third-party runtime dependencies (CPython >=3.10, stdlib only).
+# Install the package with: pip install -e .
+#
+# Optional — only needed to run the test suite:
+pytest>=7.0
