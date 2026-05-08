@@ -1,7 +1,7 @@
 # Architecture Decision Record
 ## App 07 — DataGuard Bootstrapper
-**DataGuard Group | Document 1 of 5**
-**Status: Accepted**
+***DataGuard Group | Document 1 of 5***
+***Status: Accepted***
 
 ---
 
