@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/config.schema.json",
+  "title": "DataGuard .dataguardrc (config file values)",
+  "description": "JSON object merged with defaults by dataguard.config.load_config. Unknown keys are ignored with a warning.",
+  "type": "object",
+  "properties": {
+    "default_output_format": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Console output style label (reserved for future use)."
+    },
+    "color_enabled": { "type": "boolean" },
+    "verbosity": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Coerced/clamped by dataguard.config.coerce_config_value."
+    },
+    "strict_mode": { "type": "boolean" },
+    "min_confidence_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Default minimum confidence for `contacts` when --min-confidence is omitted."
+    },
+    "password_min_length": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 256
+    },
+    "log_top_n": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10000
+    },
+    "pipe_format": {
+      "type": "string",
+      "enum": ["text", "json", "raw"]
+    },
+    "report_format": {
+      "type": "string",
+      "enum": ["text", "json", "csv"]
+    }
+  },
+  "additionalProperties": false
+}

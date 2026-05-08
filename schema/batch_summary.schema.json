@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/batch_summary.schema.json",
+  "title": "DataGuard `batch --batch-report` JSON payload",
+  "type": "object",
+  "required": ["files_processed", "module_counts", "total_warnings", "total_errors", "results"],
+  "properties": {
+    "files_processed": { "type": "integer", "minimum": 0 },
+    "module_counts": {
+      "type": "object",
+      "description": "Count of files routed to each module id.",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "total_warnings": { "type": "integer", "minimum": 0 },
+    "total_errors": { "type": "integer", "minimum": 0 },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["input_file", "detected_module", "output_file", "warnings", "errors", "summary"],
+        "properties": {
+          "input_file": { "type": "string" },
+          "detected_module": {
+            "$ref": "common_defs.schema.json#/$defs/module_id"
+          },
+          "output_file": { "type": "string" },
+          "warnings": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "errors": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "summary": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

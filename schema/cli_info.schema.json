@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/cli_info.schema.json",
+  "title": "DataGuard `info` subcommand JSON stdout",
+  "type": "object",
+  "required": ["version", "python_version", "platform", "modules"],
+  "properties": {
+    "version": { "type": "string" },
+    "python_version": { "type": "string" },
+    "platform": { "type": "string" },
+    "modules": {
+      "type": "object",
+      "description": "Per-module health string (e.g. ok, not-callable, error: ...).",
+      "additionalProperties": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

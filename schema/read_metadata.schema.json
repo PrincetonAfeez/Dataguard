@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/read_metadata.schema.json",
+  "title": "Input read metadata (dataguard.io_utils.read_text_file / read_input_text)",
+  "description": "Files and stdin are read as raw bytes, then passed through decode_bytes (UTF-8 strict, then Latin-1 with warning). Matches InputReadMetadata in io_utils.",
+  "$ref": "common_defs.schema.json#/$defs/read_metadata"
+}

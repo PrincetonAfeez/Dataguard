@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/common_defs.schema.json",
+  "title": "DataGuard shared JSON Schema definitions",
+  "$defs": {
+    "module_id": {
+      "type": "string",
+      "enum": ["sanitize", "contacts", "audit", "logs", "csv", "html"]
+    },
+    "severity": {
+      "type": "string",
+      "description": "Finding severity used in reports and tables.",
+      "enum": ["critical", "high", "medium", "low", "info"]
+    },
+    "finding": {
+      "type": "object",
+      "description": "Structured finding from a module; optional fields vary by module.",
+      "required": ["severity", "category", "message"],
+      "properties": {
+        "severity": { "$ref": "#/$defs/severity" },
+        "category": { "type": "string" },
+        "line": { "type": "integer" },
+        "message": { "type": "string" },
+        "position": {
+          "type": "integer",
+          "description": "Character offset (sanitize module)."
+        },
+        "ip": {
+          "type": "string",
+          "description": "Client IP (log threat findings)."
+        }
+      },
+      "additionalProperties": true
+    },
+    "password_rule_result": {
+      "type": "object",
+      "required": ["name", "points", "max_points", "passed", "details", "feedback"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "length",
+            "diversity",
+            "dictionary",
+            "sequences",
+            "repeats",
+            "keyboard_patterns",
+            "entropy"
+          ]
+        },
+        "points": { "type": "integer" },
+        "max_points": { "type": "integer" },
+        "passed": { "type": "boolean" },
+        "details": { "type": "string" },
+        "feedback": { "type": "string" },
+        "entropy_bits": {
+          "type": ["number", "null"],
+          "description": "Present only on the entropy rule."
+        }
+      },
+      "additionalProperties": true
+    },
+    "password_analysis": {
+      "type": "object",
+      "required": ["password", "score", "grade", "rules", "feedback", "entropy_bits"],
+      "properties": {
+        "password": { "type": "string" },
+        "score": { "type": "integer" },
+        "grade": {
+          "type": "string",
+          "enum": ["Fortress", "Strong", "Fair", "Weak", "Terrible"]
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/password_rule_result" }
+        },
+        "feedback": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "entropy_bits": { "type": ["number", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "contact_row": {
+      "type": "object",
+      "required": ["name_if_found", "email", "phone", "source_line", "confidence_score"],
+      "properties": {
+        "name_if_found": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "source_line": { "type": "integer" },
+        "confidence_score": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "log_entry": {
+      "type": "object",
+      "description": "Fields from Apache/Nginx/generic regex parse_line groupdict.",
+      "properties": {
+        "ip": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "method": { "type": "string" },
+        "url": { "type": "string" },
+        "status": { "type": "string" },
+        "size": { "type": "string" },
+        "referer": { "type": "string" },
+        "agent": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "column_profile": {
+      "type": "object",
+      "required": ["name", "type", "completeness"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "completeness": { "type": "number" }
+      },
+      "additionalProperties": true
+    },
+    "csv_row_object": {
+      "type": "object",
+      "description": "One converted CSV row as string-keyed cells (values may be null).",
+      "additionalProperties": true
+    },
+    "read_metadata": {
+      "type": "object",
+      "description": "Returned with text from read_text_file / read_input_text. Stdin is read via sys.stdin.buffer and decoded with the same pipeline as files (decode_bytes).",
+      "required": ["path", "encoding", "read_warnings"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Filesystem path, or \"<stdin>\", or \"<direct-input>\" for --input/--password."
+        },
+        "encoding": {
+          "type": "string",
+          "description": "Effective text encoding label after decode_bytes: typically \"utf-8\", or \"latin-1\" when UTF-8 strict decode failed (see read_warnings)."
+        },
+        "read_warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Non-fatal decode notices (e.g. UTF-8 BOM stripped, Latin-1 fallback after UTF-8 failure)."
+        }
+      },
+      "additionalProperties": true
+    },
+    "io_decode_warnings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Same semantics as read_metadata.read_warnings; copied onto module result.metadata by the CLI after a file/stdin read."
+    },
+    "html_diff_block": {
+      "type": "object",
+      "description": "Present on html module results when --show-diff is used.",
+      "required": ["unified", "before_characters", "after_characters"],
+      "properties": {
+        "unified": { "type": "string" },
+        "before_characters": { "type": "integer" },
+        "after_characters": { "type": "integer" }
+      },
+      "additionalProperties": true
+    },
+    "module_result_base": {
+      "type": "object",
+      "required": ["module_name", "title", "output", "findings", "warnings", "errors", "summary"],
+      "properties": {
+        "module_name": { "$ref": "#/$defs/module_id" },
+        "title": { "type": "string" },
+        "output": {},
+        "findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": { "type": "object", "additionalProperties": true },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

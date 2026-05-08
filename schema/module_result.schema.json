@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/module_result.schema.json",
+  "title": "DataGuard module run() result (stdout/report payload core)",
+  "description": "Shape returned by dataguard.modules.*.run and consumed by the CLI. The CLI may merge io_utils read_warnings into metadata. Optional keys beyond each branch are ignored by validators unless additionalProperties is false.",
+  "oneOf": [
+    { "$ref": "#/$defs/result_sanitize" },
+    { "$ref": "#/$defs/result_html" },
+    { "$ref": "#/$defs/result_contacts" },
+    { "$ref": "#/$defs/result_audit" },
+    { "$ref": "#/$defs/result_logs" },
+    { "$ref": "#/$defs/result_csv" }
+  ],
+  "$defs": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "common_defs.schema.json#/$defs/finding"
+      }
+    },
+    "result_sanitize": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "sanitize" },
+        "title": { "type": "string" },
+        "output": { "type": "string" },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source"],
+          "properties": {
+            "source": { "type": "string" },
+            "strip_bidi_format_marks": {
+              "type": "boolean",
+              "description": "False when sanitize was run with --preserve-bidi-marks."
+            },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "result_html": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "html" },
+        "title": { "type": "string" },
+        "output": { "type": "string" },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source", "mode", "show_diff"],
+          "properties": {
+            "source": { "type": "string" },
+            "mode": { "type": "string", "enum": ["plain", "safe"] },
+            "show_diff": { "type": "boolean" },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "diff": {
+          "$ref": "common_defs.schema.json#/$defs/html_diff_block"
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "result_contacts": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "rows",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "contacts" },
+        "title": { "type": "string" },
+        "output": { "type": "string", "description": "CSV text" },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "common_defs.schema.json#/$defs/contact_row"
+          }
+        },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source", "min_confidence"],
+          "properties": {
+            "source": { "type": "string" },
+            "min_confidence": { "type": "number" },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "result_audit": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "analyses",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "audit" },
+        "title": { "type": "string" },
+        "output": { "type": "string" },
+        "analyses": {
+          "type": "array",
+          "items": {
+            "$ref": "common_defs.schema.json#/$defs/password_analysis"
+          }
+        },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source", "minimum_length"],
+          "properties": {
+            "source": { "type": "string" },
+            "minimum_length": { "type": "integer" },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "result_logs": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "entries",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "logs" },
+        "title": { "type": "string" },
+        "output": { "type": "string" },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "common_defs.schema.json#/$defs/log_entry"
+          }
+        },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source", "format", "top"],
+          "properties": {
+            "source": { "type": "string" },
+            "format": {
+              "type": "string",
+              "enum": ["apache", "nginx", "generic"]
+            },
+            "top": { "type": "integer" },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "quarantine_row": {
+      "type": "array",
+      "items": {
+        "type": ["string", "null"]
+      }
+    },
+    "result_csv": {
+      "type": "object",
+      "required": [
+        "module_name",
+        "title",
+        "output",
+        "rows",
+        "quarantine_rows",
+        "findings",
+        "warnings",
+        "errors",
+        "stats",
+        "metadata",
+        "column_profiles",
+        "summary"
+      ],
+      "properties": {
+        "module_name": { "const": "csv" },
+        "title": { "type": "string" },
+        "output": {
+          "type": "string",
+          "description": "JSON text (stringified array of row objects)"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "common_defs.schema.json#/$defs/csv_row_object"
+          }
+        },
+        "quarantine_rows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/quarantine_row" }
+        },
+        "findings": { "$ref": "#/$defs/findings" },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "stats": { "type": "object", "additionalProperties": true },
+        "metadata": {
+          "type": "object",
+          "required": ["source", "delimiter", "header_status"],
+          "properties": {
+            "source": { "type": "string" },
+            "delimiter": { "type": "string" },
+            "header_status": { "type": "string" },
+            "read_warnings": {
+              "$ref": "common_defs.schema.json#/$defs/io_decode_warnings"
+            }
+          },
+          "additionalProperties": true
+        },
+        "column_profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "common_defs.schema.json#/$defs/column_profile"
+          }
+        },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/auto_detection.schema.json",
+  "title": "DataGuard auto-detect routing (dataguard.auto_detect.detect_module)",
+  "type": "object",
+  "required": ["module", "scores", "reason", "notes"],
+  "properties": {
+    "module": {
+      "$ref": "common_defs.schema.json#/$defs/module_id"
+    },
+    "scores": {
+      "type": "object",
+      "required": ["logs", "csv", "html", "contacts", "audit", "sanitize"],
+      "properties": {
+        "logs": { "type": "number" },
+        "csv": { "type": "number" },
+        "html": { "type": "number" },
+        "contacts": { "type": "number" },
+        "audit": { "type": "number" },
+        "sanitize": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "reason": { "type": "string" },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

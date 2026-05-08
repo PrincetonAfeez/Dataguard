@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataguard.local/schema/config_cli_response.schema.json",
+  "title": "DataGuard `config` subcommand JSON stdout (no --set)",
+  "type": "object",
+  "required": ["config_path", "values"],
+  "properties": {
+    "config_path": { "type": "string" },
+    "values": {
+      "$ref": "config.schema.json"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,46 @@
+{
+  "title": "DataGuard JSON Schema index",
+  "draft": "2020-12",
+  "schemas": [
+    {
+      "id": "https://dataguard.local/schema/common_defs.schema.json",
+      "path": "common_defs.schema.json",
+      "description": "Shared $defs: findings, password analysis, contact rows, log entries, etc."
+    },
+    {
+      "id": "https://dataguard.local/schema/config.schema.json",
+      "path": "config.schema.json",
+      "description": ".dataguardrc merged values"
+    },
+    {
+      "id": "https://dataguard.local/schema/config_cli_response.schema.json",
+      "path": "config_cli_response.schema.json",
+      "description": "`dataguard config` JSON output (without --set)"
+    },
+    {
+      "id": "https://dataguard.local/schema/auto_detection.schema.json",
+      "path": "auto_detection.schema.json",
+      "description": "`auto_detect.detect_module` return value"
+    },
+    {
+      "id": "https://dataguard.local/schema/batch_summary.schema.json",
+      "path": "batch_summary.schema.json",
+      "description": "`batch --batch-report` file payload"
+    },
+    {
+      "id": "https://dataguard.local/schema/cli_info.schema.json",
+      "path": "cli_info.schema.json",
+      "description": "`info` subcommand JSON stdout"
+    },
+    {
+      "id": "https://dataguard.local/schema/module_result.schema.json",
+      "path": "module_result.schema.json",
+      "description": "Unified module run() result (oneOf per module_name)"
+    },
+    {
+      "id": "https://dataguard.local/schema/read_metadata.schema.json",
+      "path": "read_metadata.schema.json",
+      "description": "File/stdin read metadata (binary read + decode_bytes; path/encoding/read_warnings)"
+    }
+  ]
+}
